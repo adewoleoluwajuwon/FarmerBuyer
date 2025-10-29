@@ -1,0 +1,125 @@
+{
+  "info": {
+    "name": "AgroHub API",
+    "_postman_id": "e2da3f1a-5c2a-4a2a-9f9a-postman",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "OTP - Request",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": {
+          "raw": "{{base}}/api/auth/otp/request",
+          "host": ["{{base}}"],
+          "path": ["api", "auth", "otp", "request"]
+        },
+        "body": { "mode": "raw", "raw": "{\"phone\":\"2348099999999\"}" }
+      }
+    },
+    {
+      "name": "OTP - Verify",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": {
+          "raw": "{{base}}/api/auth/otp/verify",
+          "host": ["{{base}}"],
+          "path": ["api", "auth", "otp", "verify"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"phone\":\"2348099999999\",\"code\":\"{{devCode}}\"}"
+        }
+      }
+    },
+    {
+      "name": "Listings - List",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{base}}/api/listings",
+          "host": ["{{base}}"],
+          "path": ["api", "listings"]
+        }
+      }
+    },
+    {
+      "name": "Listings - Create",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": {
+          "raw": "{{base}}/api/listings",
+          "host": ["{{base}}"],
+          "path": ["api", "listings"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"farmerId\": 1,\n  \"cropId\": 1,\n  \"title\": \"Fresh Tomatoes\",\n  \"description\": \"Red and firm\",\n  \"unit\": \"KG\",\n  \"quantityAvailable\": 100,\n  \"minOrderQty\": 5,\n  \"pricePerUnitNgn\": 500,\n  \"locationText\": \"Mile 12, Lagos\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Orders - Place",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": {
+          "raw": "{{base}}/api/orders",
+          "host": ["{{base}}"],
+          "path": ["api", "orders"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"buyerId\": 2, \"listingId\": 1, \"quantityOrdered\": 10 }"
+        }
+      }
+    },
+    {
+      "name": "Paystack Webhook (mock)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "x-paystack-signature", "value": "{{paystack_sig}}" }
+        ],
+        "url": {
+          "raw": "{{base}}/api/payments/paystack/webhook",
+          "host": ["{{base}}"],
+          "path": ["api", "payments", "paystack", "webhook"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"event\":\"charge.success\",\n  \"data\": { \"reference\":\"order-1\", \"amount\": 500000 }\n}"
+        }
+      }
+    },
+    {
+      "name": "Flutterwave Webhook (mock)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "verif-hash", "value": "{{flw_hash}}" }
+        ],
+        "url": {
+          "raw": "{{base}}/api/payments/flutterwave/webhook",
+          "host": ["{{base}}"],
+          "path": ["api", "payments", "flutterwave", "webhook"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\":\"successful\",\n  \"data\": { \"tx_ref\":\"order-1\", \"amount\": 5000 }\n}"
+        }
+      }
+    }
+  ],
+  "variable": [
+    { "key": "base", "value": "http://localhost:8085" },
+    { "key": "paystack_sig", "value": "computed-hmac" },
+    { "key": "flw_hash", "value": "flw_hash_xxx" },
+    { "key": "devCode", "value": "" }
+  ]
+}
