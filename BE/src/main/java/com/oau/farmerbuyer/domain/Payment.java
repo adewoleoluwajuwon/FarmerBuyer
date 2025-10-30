@@ -41,4 +41,13 @@ public class Payment {
     @Column(name="created_at", nullable=false, updatable=false)
     private Instant createdAt;
     @PrePersist void pre() { createdAt = Instant.now(); }
+
+    @Column(name = "channel", length = 64)
+    private String channel;
+
+    @Column(name = "currency", length = 8)
+    private String currency;
+
+    @Column(name = "gateway_fee", precision = 12, scale = 2)
+    private BigDecimal gatewayFee;
 }

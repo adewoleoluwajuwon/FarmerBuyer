@@ -4,6 +4,7 @@ package com.oau.farmerbuyer.web;
 
 
 import com.oau.farmerbuyer.dto.ListingDtos;
+import com.oau.farmerbuyer.security.SecurityUtils;
 import com.oau.farmerbuyer.service.ListingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,9 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import org.springframework.security.core.Authentication;
+
 
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -64,11 +68,24 @@ public class ListingController {
         return ResponseEntity.ok(response);
     }
 
+
+
     @PreAuthorize("hasAnyRole('FARMER','ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> softDelete(@PathVariable Long id) {
         listingService.softDelete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/farmer/me")
+    @PreAuthorize("hasAnyRole('FARMER','ADMIN')")
+    public ResponseEntity<Page<ListingDtos.Response>> myListings(
+            @PageableDefault Pageable pageable,
+            Authentication auth
+    ) {
+        Long farmerId = SecurityUtils.currentUserId(auth);
+        var response = listingService.findByFarmer(farmerId, pageable);
+        return ResponseEntity.ok(response);
     }
 
     @PreAuthorize("hasAnyRole('FARMER','ADMIN')")
@@ -77,4 +94,6 @@ public class ListingController {
         listingService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+
 }

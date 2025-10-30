@@ -17,4 +17,17 @@ public final class SecurityUtils {
         Authentication a = SecurityContextHolder.getContext().getAuthentication();
         return a != null && a.getAuthorities().stream().anyMatch(ga -> ga.getAuthority().equals("ROLE_"+role));
     }
+
+    public static Long currentUserId(Authentication auth) {
+        if (auth == null) throw new IllegalStateException("No authentication in context");
+        Object p = auth.getPrincipal();
+        if (p instanceof String s) return Long.valueOf(s);
+        if (p instanceof org.springframework.security.core.userdetails.User u) {
+            return Long.valueOf(u.getUsername());
+        }
+        if (p instanceof Long l) return l;
+        throw new IllegalStateException("Unable to parse principal as userId");
+    }
+
+
 }

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface ListingService {
+
     ListingDtos.Response create(ListingDtos.Create dto);
     ListingDtos.Response update(Long id, ListingDtos.Update dto);
     ListingDtos.Response findById(Long id);
